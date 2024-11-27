@@ -10,7 +10,7 @@ import { Link } from 'expo-router';
 type ProductItemListProps={
     product:Product
 }
-const defaultImg = "https://www.shutterstock.com/image-vector/error-500-page-empty-symbol-260nw-1711106146.jpg"
+export const defaultPizzaImg = "https://www.shutterstock.com/image-vector/error-500-page-empty-symbol-260nw-1711106146.jpg"
 
  export const ProductItemList=({product}:ProductItemListProps) =>{
   return (
@@ -18,7 +18,7 @@ const defaultImg = "https://www.shutterstock.com/image-vector/error-500-page-emp
     <Pressable style={styles.container}>
     <Image
         style={styles.image}
-        source={{uri: product.image || defaultImg}}
+        source={{uri: product.image || defaultPizzaImg}}
         resizeMode='contain'
       />
       
