@@ -4,16 +4,26 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import products from "@/assets/data/products";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import Button from "@/components/Button";
-
+import { useCart } from "@/app/CartProvider";
+import { PizzaSize } from "@/types";
+import { router } from "expo-router";
 const ProductDetailsPage = () => {
-  const { id } = useLocalSearchParams();
-  const [selectedSize, setSelectedSize] = useState("M");
-  const product = products.find((p) => p.id.toString() === id);
-  const sizes = ["S", "M", "L", "XL"];
 
-  const addtoCart =()=>{
-    
-  }
+  const { id } = useLocalSearchParams();
+  const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
+  const product = products.find((p) => p.id.toString() === id);
+  const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
+
+  const { addItem } = useCart();
+
+  const addtoCart = () => {
+    console.warn(" Hello ");
+    if (!product) {
+      return;
+    }
+    addItem(product, selectedSize);
+    router.push('/cart')
+  };
 
   if (!product) {
     return <Text>Product not found</Text>;
@@ -29,7 +39,9 @@ const ProductDetailsPage = () => {
       <View style={styles.sizes}>
         {sizes.map((size) => (
           <Pressable
-          onPress={()=>{setSelectedSize(size)}}
+            onPress={() => {
+              setSelectedSize(size);
+            }}
             key={size}
             style={[
               styles.size,
@@ -41,7 +53,7 @@ const ProductDetailsPage = () => {
         ))}
       </View>
       <Text style={styles.price}>${product.price}</Text>
-      <Button onPress = {addtoCart} text='Add to cart' />
+      <Button onPress={addtoCart} text="Add to cart" />
     </View>
   );
 };
@@ -54,7 +66,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop:'auto'
+    marginTop: "auto",
   },
   container: {
     backgroundColor: "white",
