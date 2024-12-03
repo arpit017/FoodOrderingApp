@@ -10,7 +10,7 @@ import { Link } from 'expo-router';
 type ProductItemListProps={
     product:Product
 }
-export const defaultPizzaImg = "https://www.shutterstock.com/image-vector/error-500-page-empty-symbol-260nw-1711106146.jpg"
+export const defaultPizzaImg = "https://img.freepik.com/free-psd/top-view-delicious-pizza_23-2151868964.jpg"
 
  export const ProductItemList=({product}:ProductItemListProps) =>{
   return (

@@ -11,7 +11,7 @@ export default function MenuStack() {
           const isWeb = Platform.OS === "web";
           return isWeb ? (
             // Web: Use Link directly
-            <Link href="/">
+            <Link href="/(admin)/menu/create">
               <FontAwesome
                 name="plus-square-o"
                 size={25}
@@ -21,7 +21,7 @@ export default function MenuStack() {
             </Link>
           ) : (
             // Mobile: Wrap Link in Pressable for better interaction
-            <Link href="/" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
