@@ -1,12 +1,14 @@
-import { useLocalSearchParams, Stack } from "expo-router";
+import { useLocalSearchParams, Stack, Link } from "expo-router";
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable, Platform } from "react-native";
 import products from "@/assets/data/products";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import Button from "@/components/Button";
 import { useCart } from "@/app/CartProvider";
 import { PizzaSize } from "@/types";
 import { router } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
 const ProductDetailsPage = () => {
 
   const { id } = useLocalSearchParams();
@@ -30,6 +32,36 @@ const ProductDetailsPage = () => {
   }
   return (
     <View style={styles.container}>
+
+<Stack.Screen  options={{ title: "Menu",headerRight: () => {
+          // Use different approaches based on the platform
+          const isWeb = Platform.OS === "web";
+          return isWeb ? (
+            // Web: Use Link directly
+            <Link href={`/(admin)/menu/create?id=${id}`}>
+              <FontAwesome
+                name="pencil"
+                size={25}
+                color={Colors.light.tint}
+                style={{ marginRight: 15 }}
+              />
+            </Link>
+          ) : (
+            // Mobile: Wrap Link in Pressable for better interaction
+            <Link href={`/(admin)/menu/create?id=${id}`} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="pencil"
+                    size={25}
+                    color={Colors.light.tint}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          );
+        }, }} />
       <Stack.Screen options={{ title: product?.name }} />
       <Image
         source={{ uri: product.image || defaultPizzaImg }}
