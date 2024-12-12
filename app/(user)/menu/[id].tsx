@@ -8,7 +8,6 @@ import { useCart } from "@/app/CartProvider";
 import { PizzaSize } from "@/types";
 import { router } from "expo-router";
 const ProductDetailsPage = () => {
-
   const { id } = useLocalSearchParams();
   const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
   const product = products.find((p) => p.id.toString() === id);
@@ -22,7 +21,7 @@ const ProductDetailsPage = () => {
       return;
     }
     addItem(product, selectedSize);
-    router.push('/cart')
+    router.push("/cart");
   };
 
   if (!product) {

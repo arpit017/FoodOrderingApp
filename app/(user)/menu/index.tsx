@@ -4,6 +4,7 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import products from '../../../assets/data/products';
 
 import { ProductItemList } from '@/components/ProductItemList';
+import React from 'react';
 
 export default function TabOneScreen() {
   return (
