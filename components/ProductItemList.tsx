@@ -1,8 +1,4 @@
 import { StyleSheet,Text,View,Image, Pressable } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-
-
 import Colors from '@/constants/Colors';
 import { Product } from '@/types';
 import { Link } from 'expo-router';
@@ -21,8 +17,6 @@ export const defaultPizzaImg = "https://img.freepik.com/free-psd/top-view-delici
         source={{uri: product.image || defaultPizzaImg}}
         resizeMode='contain'
       />
-      
-
       <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.price}>${product.price}</Text>
     </Pressable>

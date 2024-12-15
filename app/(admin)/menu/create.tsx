@@ -1,10 +1,16 @@
 import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "@/api/products";
 
 const CreateProductScreen = () => {
   const [name, setName] = useState("");
@@ -12,8 +18,26 @@ const CreateProductScreen = () => {
   const [error, setError] = useState("");
   const [image, setImage] = useState<string | null>(null);
 
-  const { id } = useLocalSearchParams();
-  const isUpdating = !!id;
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(
+    typeof idString === "string" ? idString : idString?.[0]
+  );
+  const isUpdating = !!idString;
+
+  const router = useRouter();
+
+  const { mutate: insertProduct } = useInsertProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { data: producttopopulate } = useProduct(id);
+  const { mutate: deleteProduct } = useDeleteProduct();
+
+  useEffect(() => {
+    if (producttopopulate) {
+      setName(producttopopulate.name);
+      setPrice(producttopopulate.price.toString());
+      setImage(producttopopulate.image);
+    }
+  }, [producttopopulate]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -24,7 +48,7 @@ const CreateProductScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -35,6 +59,15 @@ const CreateProductScreen = () => {
     if (!validateInput()) {
       return;
     }
+    updateProduct(
+      { id, name, price: parseFloat(price), image },
+      {
+        onSuccess: () => {
+          reset();
+          router.back();
+        },
+      }
+    );
     console.log("updatingProduct", name, price);
   };
 
@@ -52,7 +85,16 @@ const CreateProductScreen = () => {
     }
 
     console.warn("Creating Product", name, price);
-    reset();
+
+    insertProduct(
+      { name, price: parseFloat(price), image },
+      {
+        onSuccess: () => {
+          reset();
+          router.back();
+        },
+      }
+    );
   };
 
   const validateInput = () => {
@@ -79,7 +121,11 @@ const CreateProductScreen = () => {
   };
 
   const onDelete = () => {
-    console.warn("Delete!!!!!!!!!!!");
+    deleteProduct(id, {
+      onSuccess: () => {
+        router.replace("/(admin)");
+      },
+    });
   };
 
   const confirmDelete = () => {

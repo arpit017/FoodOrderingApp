@@ -1,16 +1,22 @@
 import { useLocalSearchParams, Stack } from "expo-router";
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import products from "@/assets/data/products";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import Button from "@/components/Button";
 import { useCart } from "@/providers/CartProvider";
 import { PizzaSize } from "@/types";
 import { router } from "expo-router";
+import { isLoaded, isLoading } from "expo-font";
+import { useProduct } from "@/api/products";
 const ProductDetailsPage = () => {
-  const { id } = useLocalSearchParams();
+  const { id:product_id } = useLocalSearchParams();
+
+  const id=parseFloat(typeof(product_id)=="string"?product_id:product_id[0])
+
+  const {data:product,error,isLoading}=useProduct(id)
   const [selectedSize, setSelectedSize] = useState<PizzaSize>("M");
-  const product = products.find((p) => p.id.toString() === id);
+  
   const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
   const { addItem } = useCart();
@@ -23,10 +29,13 @@ const ProductDetailsPage = () => {
     addItem(product, selectedSize);
     router.push("/cart");
   };
-
-  if (!product) {
+  if(isLoading){
+    return <ActivityIndicator/>
+  }
+  if(error){
     return <Text>Product not found</Text>;
   }
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: product?.name }} />
