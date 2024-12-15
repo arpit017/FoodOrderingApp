@@ -1,7 +1,7 @@
 import { View, Text, Platform, FlatList } from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { useCart } from './CartProvider'
+import { useCart } from '../providers/CartProvider'
 import CartListItem from '@/components/CartListItem'
 import Button from '@/components/Button'
 

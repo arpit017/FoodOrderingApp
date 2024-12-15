@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import products from "@/assets/data/products";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import Button from "@/components/Button";
-import { useCart } from "@/app/CartProvider";
+import { useCart } from "@/providers/CartProvider";
 import { PizzaSize } from "@/types";
 import { router } from "expo-router";
 const ProductDetailsPage = () => {
