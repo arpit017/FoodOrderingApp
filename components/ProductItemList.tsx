@@ -2,9 +2,10 @@ import { StyleSheet,Text,View,Image, Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
 import { Product } from '@/types';
 import { Link } from 'expo-router';
+import { Tables } from '@/src/database.types';
 
 type ProductItemListProps={
-    product:Product
+    product:Tables<'products'>
 }
 export const defaultPizzaImg = "https://img.freepik.com/free-psd/top-view-delicious-pizza_23-2151868964.jpg"
 
