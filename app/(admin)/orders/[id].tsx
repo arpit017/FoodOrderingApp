@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image, ActivityIndicator } from "react-native";
 const dayjs = require("dayjs");
 const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -9,23 +9,34 @@ import orders from "@/assets/data/orders";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import OrderListItem from "@/components/OrderListItem";
 import Colors from "@/constants/Colors";
+import { useOrderDetail, useUpdateOrder } from "@/api/orders";
 
 const OrderDetailScreen = () => {
-  const { id } = useLocalSearchParams();
-  const temp = orders && orders.find((ele) => ele.id === Number(id));
-  if (!temp) {
-    // Handle the case where the order is not found
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Order not found</Text>
-      </View>
-    );
-  }
-  // console.log(temp);
+  const { id:idString } = useLocalSearchParams();
+  const id=parseFloat(typeof(idString)==="string"?idString:idString[0])
 
+ const{data:temp,isLoading,error}=useOrderDetail(id)
+ const{mutate:updateOrder}=useUpdateOrder()
+ 
+ if(error){
+  return <Text>Not Found</Text>
+ }
+ if(!temp){
+  return <Text>Not order Found</Text>
+ }
+ if(isLoading){
+  return <ActivityIndicator/>
+ }
+
+ const updateOrderFun=(status:string)=>{
+  // console.warn("Update status")
+  updateOrder({id:id,updatedFields:{status}})
+ }
+ 
+// console.log(id)
   return (
     <View>
-      <Stack.Screen options={{ title: `Order # ${temp.id}` }} />
+      <Stack.Screen options={{ title: `Order # ${id}` }} />
       <OrderListItem order={temp} />
       {temp.order_items &&
         temp.order_items.map((ele) => {
@@ -34,12 +45,12 @@ const OrderDetailScreen = () => {
               <View style={{ flexDirection: "row", maxWidth: "50%" }}>
                 <View>
                   <Image
-                    source={{ uri: ele.products.image || defaultPizzaImg }}
+                    source={{ uri: ele.products?.image || defaultPizzaImg }}
                     style={styles.image}
                   />
                 </View>
                 <View>
-                  <Text style={styles.detailsText}>{ele.products.name}</Text>
+                  <Text style={styles.detailsText}>{ele.products?.name}</Text>
                   <View
                     style={{
                       flexDirection: "row",
@@ -47,7 +58,7 @@ const OrderDetailScreen = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Text style={styles.price}>${ele.products.price} </Text>
+                    <Text style={styles.price}>${ele.products?.price} </Text>
                     <Text style={styles.detailsText}>Size: {ele.size} </Text>
                   </View>
                 </View>
@@ -65,7 +76,7 @@ const OrderDetailScreen = () => {
           {OrderStatusList.map((status) => (
             <Pressable
               key={status}
-              onPress={() => console.warn("Update status")}
+              onPress={()=>{updateOrderFun(status)}}
               style={{
                 borderColor: Colors.light.tint,
                 borderWidth: 1,

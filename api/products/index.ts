@@ -5,6 +5,7 @@ export const useProductList = () => {
   return useQuery({
     queryKey: ["products"],
     queryFn: async () => {
+      // console.log("aaya,aaya")
       const { data, error } = await supabase.from("products").select("*");
       if (error) {
         throw new Error(error.message);

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image, ActivityIndicator } from "react-native";
 const dayjs = require("dayjs");
 const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -8,20 +8,25 @@ import { Link, Stack, useLocalSearchParams } from "expo-router";
 import orders from "@/assets/data/orders";
 import { defaultPizzaImg } from "@/components/ProductItemList";
 import OrderListItem from "@/components/OrderListItem";
+import { useOrderDetail } from "@/api/orders";
+import { useOrderStatusSubscription } from "@/api/orders/subscription";
 
 const OrderDetailScreen = () => {
-  const { id } = useLocalSearchParams();
-  const temp = orders && orders.find((ele) => ele.id === Number(id));
-  if (!temp) {
-    // Handle the case where the order is not found
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Order not found</Text>
-      </View>
-    );
-  }
-  // console.log(temp);
-
+  const { id:idString } = useLocalSearchParams();
+    const id=parseFloat(typeof(idString)==="string"?idString:idString[0])
+  
+   const{data:temp,isLoading,error}=useOrderDetail(id)
+   useOrderStatusSubscription(id)
+   if(error){
+    return <Text>Not Found</Text>
+   }
+   if(!temp){
+    return <Text>Not order Found</Text>
+   }
+   if(isLoading){
+    return <ActivityIndicator/>
+   }
+   
   return (
     <View>
       {/* <View key={temp.id} style={styles.container}>
@@ -46,14 +51,14 @@ const OrderDetailScreen = () => {
               <View style={{ flexDirection: "row", maxWidth: "50%" }}>
                 <View>
                   <Image
-                    source={{ uri: ele.products.image || defaultPizzaImg }}
+                    source={{ uri: ele.products?.image || defaultPizzaImg }}
                     style={styles.image}
                   />
                 </View>
                 <View>
-                  <Text style={styles.detailsText}>{ele.products.name}</Text>
+                  <Text style={styles.detailsText}>{ele.products?.name}</Text>
                   <View style={{ flexDirection: "row",gap:6,alignItems:"center" }}>
-                    <Text style={styles.price}>${ele.products.price} </Text>
+                    <Text style={styles.price}>${ele.products?.price} </Text>
                     <Text style={styles.detailsText}>Size: {ele.size} </Text>
                   </View>
                 </View>

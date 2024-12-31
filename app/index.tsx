@@ -9,7 +9,7 @@ const index = () => {
   const {session,loading,isAdmin}=useAuth()
 
   if(loading){
-    console.log("hii")
+    // console.log("hii")
     return <ActivityIndicator/>
   }
   if(!session) {

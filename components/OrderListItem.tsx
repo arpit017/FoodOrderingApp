@@ -5,9 +5,10 @@ dayjs.extend(relativeTime);
 import React from "react";
 import { Order } from "@/types";
 import { Link } from "expo-router";
+import { Tables } from "@/src/database.types";
 
 type OrderListItemProps={
-  order:Order
+  order:Tables<'orders'>
 }
 
 const OrderListItem = ({ order }: OrderListItemProps) => {
