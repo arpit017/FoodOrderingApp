@@ -10,6 +10,7 @@ import { router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { useProduct } from "@/api/products";
+import RemoteImage from "@/components/RemoteImage";
 const ProductDetailsPage = () => {
 
 const { id:product_id } = useLocalSearchParams();
@@ -72,12 +73,18 @@ const { id:product_id } = useLocalSearchParams();
           );
         }, }} />
       <Stack.Screen options={{ title: product?.name }} />
-      <Image
+      {/* <Image
         source={{ uri: product.image || defaultPizzaImg }}
         style={styles.image}
+      /> */}
+      <RemoteImage
+        path={product?.image}
+        fallback={defaultPizzaImg}
+        style={styles.image}
+        resizeMode="contain"
       />
       
-      <Text style={styles.price}>${product.price}</Text>
+      <Text style={styles.price}>${product?.price}</Text>
     </View>
   );
 };
