@@ -9,6 +9,7 @@ import { PizzaSize } from "@/types";
 import { router } from "expo-router";
 import { isLoaded, isLoading } from "expo-font";
 import { useProduct } from "@/api/products";
+import RemoteImage from "@/components/RemoteImage";
 const ProductDetailsPage = () => {
   const { id:product_id } = useLocalSearchParams();
 
@@ -39,9 +40,11 @@ const ProductDetailsPage = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: product?.name }} />
-      <Image
-        source={{ uri: product.image || defaultPizzaImg }}
+      <RemoteImage
+        path={product?.image}
+        fallback={defaultPizzaImg}
         style={styles.image}
+        resizeMode="contain"
       />
       <Text style={styles.choose}>Choose your size</Text>
       <View style={styles.sizes}>

@@ -59,8 +59,6 @@ const CreateProductScreen = () => {
     // console.log(result);
 
     if (!result.canceled) {
-      // console.log("olaa"+result.assets[0].uri)
-// producttopopulate.image=result.assets[0].uri
       setImage(result.assets[0].uri);
     }
   };
@@ -184,7 +182,8 @@ const CreateProductScreen = () => {
         style={styles.image}
         source={{uri:image || defaultPizzaImg}}
         resizeMode='contain'
-      /> :
+      /> 
+      :
       <RemoteImage
       path={producttopopulate?.image}
       fallback={defaultPizzaImg}

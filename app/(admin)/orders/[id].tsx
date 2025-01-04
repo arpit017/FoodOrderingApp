@@ -10,6 +10,7 @@ import { defaultPizzaImg } from "@/components/ProductItemList";
 import OrderListItem from "@/components/OrderListItem";
 import Colors from "@/constants/Colors";
 import { useOrderDetail, useUpdateOrder } from "@/api/orders";
+import RemoteImage from "@/components/RemoteImage";
 
 const OrderDetailScreen = () => {
   const { id:idString } = useLocalSearchParams();
@@ -44,10 +45,12 @@ const OrderDetailScreen = () => {
             <View key={ele.id} style={styles.container}>
               <View style={{ flexDirection: "row", maxWidth: "50%" }}>
                 <View>
-                  <Image
-                    source={{ uri: ele.products?.image || defaultPizzaImg }}
-                    style={styles.image}
-                  />
+                <RemoteImage
+      path={ele.products?.image}
+      fallback={defaultPizzaImg}
+      style={styles.image}
+      resizeMode="contain"
+      />
                 </View>
                 <View>
                   <Text style={styles.detailsText}>{ele.products?.name}</Text>
