@@ -12,8 +12,11 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
 
   const signUpFun = async () => {
+    
     setLoading(true);
     const { error } = await supabase.auth.signUp({ email, password });
+    console.log(error)
+    // console.log(process.env.EXPO_PUBLIC_SUPABASE_ANON,process.env.EXPO_PUBLIC_SUPABASE_URL)
     if (error) {
       Alert.alert(error.message);
     }
