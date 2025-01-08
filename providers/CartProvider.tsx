@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { useInsertOrderItem } from "@/api/order-item";
 import { Tables, TablesInsert } from "@/src/database.types";
 
+
 type CartType = {
   items: CartItem[];
   addItem: (product: Product, size: CartItem["size"]) => void;
@@ -67,8 +68,10 @@ const router =useRouter()
     0
   );
 
-  const checkout = () => {
-    Alert.alert("Are you sure you want to checkout ?");
+  const checkout = async() => {
+
+    // await initialisedpaymentSheet(Math.floor(total*100))
+    // Alert.alert("Are you sure you want to checkout ?");
     insertOrder({total},{
     
       onSuccess:saveOrderItem,
