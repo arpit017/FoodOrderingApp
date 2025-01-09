@@ -10,6 +10,7 @@ const fetchPaymentSheetParams = async (amount: number) => {
     });
   
     if (data) {
+        // console.log(data)
       return data;
     }
     Alert.alert(`Error: ${error?.message ?? 'no data'}`);
@@ -19,13 +20,15 @@ const fetchPaymentSheetParams = async (amount: number) => {
   
   export const initialisePaymentSheet = async (amount: number) => {
     // setLoading(true);
-    const { paymentIntent, publishableKey } = await fetchPaymentSheetParams(amount);
+    const { paymentIntent, publishableKey,customer,ephemeralKey } = await fetchPaymentSheetParams(amount);
   
     if (!publishableKey || !paymentIntent) return;
+    
   
     const { error } = await initPaymentSheet({
       merchantDisplayName: 'Example, Inc.',
-      // customerId: customer,
+      customerId: customer,
+      customerEphemeralKeySecret:ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
       defaultBillingDetails: {
         name: 'Jane Doe',

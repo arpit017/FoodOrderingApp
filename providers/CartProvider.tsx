@@ -107,11 +107,15 @@ const router =useRouter()
     }
     
   return (
+    
+    
     <CartContext.Provider
       value={{ items, addItem, updateQuantity, total, checkout }}
     >
       {children}
+
     </CartContext.Provider>
+    
   );
 };
 
