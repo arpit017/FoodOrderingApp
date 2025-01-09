@@ -7,6 +7,7 @@ import { useInsertOrder } from "@/api/orders";
 import { useRouter } from "expo-router";
 import { useInsertOrderItem } from "@/api/order-item";
 import { Tables, TablesInsert } from "@/src/database.types";
+import {  initialisePaymentSheet, openPaymentSheet } from "@/lib/stripe";
 
 
 type CartType = {
@@ -72,6 +73,12 @@ const router =useRouter()
 
     // await initialisedpaymentSheet(Math.floor(total*100))
     // Alert.alert("Are you sure you want to checkout ?");
+
+    await initialisePaymentSheet(Math.floor(total * 100));
+    const payed = await openPaymentSheet()
+    if (!payed) {
+      return;
+    }
     insertOrder({total},{
     
       onSuccess:saveOrderItem,
