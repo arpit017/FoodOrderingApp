@@ -11,36 +11,42 @@ import OrderListItem from "@/components/OrderListItem";
 import Colors from "@/constants/Colors";
 import { useOrderDetail, useUpdateOrder } from "@/api/orders";
 import RemoteImage from "@/components/RemoteImage";
+import { notifyUserAboutOrderUpdate } from "@/lib/notification";
 
 const OrderDetailScreen = () => {
   const { id:idString } = useLocalSearchParams();
   const id=parseFloat(typeof(idString)==="string"?idString:idString[0])
 
- const{data:temp,isLoading,error}=useOrderDetail(id)
+ const{data:order,isLoading,error}=useOrderDetail(id)
  const{mutate:updateOrder}=useUpdateOrder()
  
  if(error){
   return <Text>Not Found</Text>
  }
- if(!temp){
+ if(!order){
   return <Text>Not order Found</Text>
  }
  if(isLoading){
   return <ActivityIndicator/>
  }
 
- const updateOrderFun=(status:string)=>{
+ const updateOrderFun=async(status:string)=>{
   // console.warn("Update status")
-  updateOrder({id:id,updatedFields:{status}})
- }
+  await updateOrder({id:id,updatedFields:{status}})
+  console.warn("Notify",order?.user_id  )
+  if(order){
+    await notifyUserAboutOrderUpdate({...order,status})
+  }
+
+}
  
 // console.log(id)
   return (
     <View>
       <Stack.Screen options={{ title: `Order # ${id}` }} />
-      <OrderListItem order={temp} />
-      {temp.order_items &&
-        temp.order_items.map((ele) => {
+      <OrderListItem order={order} />
+      {order.order_items &&
+        order.order_items.map((ele) => {
           return (
             <View key={ele.id} style={styles.container}>
               <View style={{ flexDirection: "row", maxWidth: "50%" }}>
@@ -87,12 +93,12 @@ const OrderDetailScreen = () => {
                 borderRadius: 5,
                 marginVertical: 10,
                 backgroundColor:
-                  temp.status === status ? Colors.light.tint : "transparent",
+                  order.status === status ? Colors.light.tint : "transparent",
               }}
             >
               <Text
                 style={{
-                  color: temp.status === status ? "white" : Colors.light.tint,
+                  color: order.status === status ? "white" : Colors.light.tint,
                 }}
               >
                 {status}

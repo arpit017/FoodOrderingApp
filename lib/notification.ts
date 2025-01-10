@@ -3,17 +3,19 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { supabase } from './supabase';
+import { Tables } from '@/src/database.types';
 
 
 
 async function sendPushNotification(
-  expoPushToken: Notifications.ExpoPushToken
+  expoPushToken: Notifications.ExpoPushToken,title:string,body:string
 ) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
+    title,
+    body,
     data: { someData: 'goes here' },
   };
 
@@ -28,6 +30,18 @@ async function sendPushNotification(
   });
 }
 
+const getUserToken =async(userId)=>{
+const {data}=await supabase.from('profiles').select('*').eq('id',userId).single()
+return data?.expo_push_token
+}
+
+export const notifyUserAboutOrderUpdate=async(order:Tables<'orders'>)=>{
+const token =await getUserToken(order.user_id)
+console.log('Notifying',token)
+const title=`You order is ${order.status}`
+const body=`Thank you for using our service`
+sendPushNotification(token,title,body)
+}
 
 
 export async function registerForPushNotificationsAsync() {
