@@ -17,6 +17,7 @@ import CartProvider from "../providers/CartProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import NotificationProvider from "@/providers/NotificationProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -60,22 +61,34 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-    
-        <AuthProvider>
-          <QueryProvider>
+      <AuthProvider>
+        <QueryProvider>
+          <NotificationProvider>
             <CartProvider>
-              <StripeProvider publishableKey="pk_test_51QeYtyQqPkg0yPJEzvad0pwi8Zl7enJM8L9PpcODuuvDS0uGJwS20oJS6SI3vwtuSBgJV9xaMnNrapy1LkQNHxn000LRC5kTV6" >
-              <Stack>
-                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-                <Stack.Screen name="(user)" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="cart" options={{ presentation: "modal" }} />
-              </Stack>
+              <StripeProvider publishableKey="pk_test_51QeYtyQqPkg0yPJEzvad0pwi8Zl7enJM8L9PpcODuuvDS0uGJwS20oJS6SI3vwtuSBgJV9xaMnNrapy1LkQNHxn000LRC5kTV6">
+                <Stack>
+                  <Stack.Screen
+                    name="(admin)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(user)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="cart"
+                    options={{ presentation: "modal" }}
+                  />
+                </Stack>
               </StripeProvider>
             </CartProvider>
-          </QueryProvider>
-        </AuthProvider>
-      
+          </NotificationProvider>
+        </QueryProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
